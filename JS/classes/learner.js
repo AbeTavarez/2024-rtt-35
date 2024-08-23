@@ -85,7 +85,6 @@ max.addGrades(["50", "40", 30, -60], [66, 33, 88, -100], [77, 84, 98]);
 
 console.log(max.average.toFixed(0));
 
-
 console.log(max instanceof Learner);
 console.log(max instanceof Object);
 console.log(max);
@@ -94,22 +93,22 @@ console.log(max);
 // Grades
 
 class Grades {
-    static getAverage(...grades) {
-      const arr = [];
-  
-      grades = grades.flat();
-      grades.forEach((grade) => {
-        grade = Number(grade);
-  
-        if (grade >= 0 && grade <= 100) {
-          arr.push(grade);
-        }
-      });
-      
-      arr.sort((a, b) => a - b).shift();
-  
-      return arr.reduce((a, b) => a + b) / arr.length;
-    }
+  static getAverage(...grades) {
+    const arr = [];
+
+    grades = grades.flat();
+    grades.forEach((grade) => {
+      grade = Number(grade);
+
+      if (grade >= 0 && grade <= 100) {
+        arr.push(grade);
+      }
+    });
+
+    arr.sort((a, b) => a - b).shift();
+
+    return arr.reduce((a, b) => a + b) / arr.length;
   }
-  
-  console.log(Grades.getAverage(99, 67, 55, [77,89,45])) ;
+}
+
+console.log(Grades.getAverage(99, 67, 55, [77, 89, 45]));
