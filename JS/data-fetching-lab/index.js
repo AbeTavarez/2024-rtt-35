@@ -11,7 +11,8 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "live_Dkf2VNavmeRLgrjGP9AWeimSG8hJdlqEnbgLp2UX4bvKAKGRagIxEQcMBMb7HzNA";
+const API_KEY =
+  "live_Dkf2VNavmeRLgrjGP9AWeimSG8hJdlqEnbgLp2UX4bvKAKGRagIxEQcMBMb7HzNA";
 
 /**
  * 1. Create an async function "initialLoad" that does the following:
@@ -21,24 +22,26 @@ const API_KEY = "live_Dkf2VNavmeRLgrjGP9AWeimSG8hJdlqEnbgLp2UX4bvKAKGRagIxEQcMBM
  *  - Each option should display text equal to the name of the breed.
  * This function should execute immediately.
  */
+document.addEventListener("DOMContentLoaded", initialLoad);
 
 async function initialLoad() {
-    const res = await fetch('https://api.thecatapi.com/v1/breeds');
-    const data = await res.json();
-    console.log(data);
-    
-    data.forEach(obj => {
-        const option = document.createElement('option');
-        option.textContent = obj.name;
-        option.setAttribute('value', obj.id);
-        breedSelect.appendChild(option);
-    });
-    
-    
+  const res = await fetch("https://api.thecatapi.com/v1/breeds", {
+    headers: { "x-api-key": API_KEY },
+  });
+  const data = await res.json();
+  console.log(data);
+
+  data.forEach((obj) => {
+    const option = document.createElement("option");
+    option.textContent = obj.name;
+    option.setAttribute("value", obj.id);
+    breedSelect.appendChild(option);
+  });
+
+  axiosHandleBreedSelect();
 }
 // calls the function as soon as the page loads
-document.onload = initialLoad();
-document.addEventListener('DOMContentLoaded', initialLoad)
+// document.onload = initialLoad();
 
 /**
  * 2. Create an event handler for breedSelect that does the following:
@@ -54,6 +57,52 @@ document.addEventListener('DOMContentLoaded', initialLoad)
  * - Each new selection should clear, re-populate, and restart the Carousel.
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
+
+breedSelect.addEventListener("change", axiosHandleBreedSelect);
+
+async function handleBreedSelect() {
+  console.log(breedSelect.value);
+
+  // fetching data by the breed id
+  const res = await fetch(
+    `https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${breedSelect.value}`,
+    {
+      headers: { "x-api-key": API_KEY },
+    },
+  );
+
+  const breedsData = await res.json();
+  console.log(breedsData);
+
+  // clear the carousel if it has any images
+  if (document.getElementById("carouselInner").firstChild) {
+    Carousel.clear();
+  }
+
+  // create and append images to carousel
+  breedsData.forEach((item) => {
+    const element = Carousel.createCarouselItem(
+      item.url,
+      item.breeds[0].name,
+      item.id,
+    );
+    Carousel.appendCarousel(element);
+  });
+
+  // check if there is a child element on the infoDump div
+  if (infoDump.firstChild) {
+    infoDump.firstChild.remove();
+  }
+
+  //TODO: be more creative
+  // create a new element for the info
+  const p = document.createElement("p");
+  p.textContent = breedsData[0].breeds[0].description;
+  infoDump.appendChild(p);
+
+  // TODO
+  Carousel.start();
+}
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
@@ -74,6 +123,90 @@ document.addEventListener('DOMContentLoaded', initialLoad)
  * - As an added challenge, try to do this on your own without referencing the lesson material.
  */
 
+// set default headers
+axios.defaults.headers.common["x-api-key"] = API_KEY;
+
+async function axiosHandleBreedSelect() {
+  console.log(breedSelect.value);
+
+  const res = await axios.get(
+    `https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${breedSelect.value}`,
+    {
+      onDownloadProgress: updateProgress,
+    },
+  );
+
+  // parsed json data
+  const breedsData = res.data;
+  console.log(breedsData);
+
+  // clear the carousel if it has any images
+  if (document.getElementById("carouselInner").firstChild) {
+    Carousel.clear();
+  }
+
+  // create and append images to carousel
+  breedsData.forEach((item) => {
+    const element = Carousel.createCarouselItem(
+      item.url,
+      item.breeds[0].name,
+      item.id,
+    );
+    Carousel.appendCarousel(element);
+  });
+
+  // check if there is a child element on the infoDump div
+  if (infoDump.firstChild) {
+    infoDump.firstChild.remove();
+  }
+
+  //TODO: be more creative
+  // create a new element for the info
+  const p = document.createElement("p");
+  p.textContent = breedsData[0].breeds[0].description;
+  infoDump.appendChild(p);
+
+  // TODO
+  Carousel.start();
+}
+
+// Interceptors
+axios.interceptors.request.use((request) => {
+  request.metadata = request.metadata || {};
+  request.metadata.startTime = new Date().getTime();
+  
+  console.log("Sending request....");
+// reset the progressBar to 0
+  progressBar.style.width = '0px';
+
+  return request;
+});
+
+axios.interceptors.response.use(
+  (response) => {
+    response.config.metadata.endTime = new Date().getTime();
+    response.config.metadata.durationInMS =
+      response.config.metadata.endTime - response.config.metadata.startTime;
+
+    console.log("Response completed....");
+
+    console.log(
+      `Request took ${response.config.metadata.durationInMS} milliseconds.`,
+    );
+    return response;
+  },
+  (error) => {
+    error.config.metadata.endTime = new Date().getTime();
+    error.config.metadata.durationInMS =
+      error.config.metadata.endTime - error.config.metadata.startTime;
+
+    console.log(
+      `Request took ${error.config.metadata.durationInMS} milliseconds.`,
+    );
+    throw error;
+  },
+);
+
 /**
  * 6. Next, we'll create a progress bar to indicate the request is in progress.
  * - The progressBar element has already been created for you.
@@ -89,6 +222,15 @@ document.addEventListener('DOMContentLoaded', initialLoad)
  *   once or twice per request to this API. This is still a concept worth familiarizing yourself
  *   with for future projects.
  */
+
+function updateProgress(progressEvent) {
+  console.log(progressEvent);
+
+  if (progressEvent.lengthComputable) {
+    progressBar.style.width = progressEvent.total + 'px';
+  }
+
+}
 
 /**
  * 7. As a final element of progress indication, add the following to your axios interceptors:
@@ -106,7 +248,7 @@ document.addEventListener('DOMContentLoaded', initialLoad)
  *   you delete that favourite using the API, giving this function "toggle" functionality.
  * - You can call this function by clicking on the heart at the top right of any image.
  */
- export async function favourite(imgId) {
+export async function favourite(imgId) {
   // your code here
 }
 
