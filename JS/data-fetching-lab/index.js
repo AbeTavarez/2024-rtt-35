@@ -39,6 +39,7 @@ async function initialLoad() {
   });
 
   axiosHandleBreedSelect();
+  Carousel.start();
 }
 // calls the function as soon as the page loads
 // document.onload = initialLoad();
@@ -174,14 +175,17 @@ async function axiosHandleBreedSelect() {
 axios.interceptors.request.use((request) => {
   request.metadata = request.metadata || {};
   request.metadata.startTime = new Date().getTime();
-  
+
   console.log("Sending request....");
-// reset the progressBar to 0
-  progressBar.style.width = '0px';
+  // reset the progressBar to 0
+  progressBar.style.width = "0px";
+  // sets the cursor to 'progress or loading'
+  document.body.style.cursor = "progress";
 
   return request;
 });
 
+// Response Interceptor
 axios.interceptors.response.use(
   (response) => {
     response.config.metadata.endTime = new Date().getTime();
@@ -189,6 +193,8 @@ axios.interceptors.response.use(
       response.config.metadata.endTime - response.config.metadata.startTime;
 
     console.log("Response completed....");
+    // sets the body cursor to default
+    document.body.style.cursor = "";
 
     console.log(
       `Request took ${response.config.metadata.durationInMS} milliseconds.`,
@@ -227,9 +233,8 @@ function updateProgress(progressEvent) {
   console.log(progressEvent);
 
   if (progressEvent.lengthComputable) {
-    progressBar.style.width = progressEvent.total + 'px';
+    progressBar.style.width = progressEvent.total + "px";
   }
-
 }
 
 /**
@@ -249,7 +254,42 @@ function updateProgress(progressEvent) {
  * - You can call this function by clicking on the heart at the top right of any image.
  */
 export async function favourite(imgId) {
-  // your code here
+    console.log(imgId);
+    
+//   axios
+//     .get("https://api.thecatapi.com/v1/favourites")
+//     .then((res) =>
+//       res.data.forEach((i) =>
+//         axios.delete(`https://api.thecatapi.com/v1/favourites/${i.id}`),
+//       ),
+//     );
+
+//   GET all favourites
+    axios.get("https://api.thecatapi.com/v1/favourites").then((res) => {
+      console.log("FAVS => ", res.data);
+
+      let deleted = false;
+
+      // loop over the items
+      res.data.forEach((item) => {
+        // if the image is favourited then delete
+        if (item.image_id === imgId) {
+            console.log(item.image_id, imgId);
+            
+          // delete
+          deleted = true;
+          axios.delete(`https://api.thecatapi.com/v1/favourites/${item.id}`)
+          .then(res => console.log(res))
+        }
+      });
+
+      if (!deleted) {
+        // add
+        axios
+          .post("https://api.thecatapi.com/v1/favourites", { image_id: imgId, sub_id: 'abe' })
+          .then((res) => console.log(res.data));
+      }
+    });
 }
 
 /**
