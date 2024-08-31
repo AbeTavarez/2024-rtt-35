@@ -302,6 +302,23 @@ export async function favourite(imgId) {
  *    repeat yourself in this section.
  */
 
+getFavouritesBtn.addEventListener('click', getFavourites);
+
+function getFavourites() {
+    axios.get("https://api.thecatapi.com/v1/favourites")
+    .then(res => {
+        console.log('All FAVS::: ', res.data);
+        Carousel.clear();
+
+        res.data.forEach(item => {
+            const element = Carousel.createCarouselItem(item.image.url, item.image_id, item.image.id)
+
+            Carousel.appendCarousel(element);
+        });
+    })
+    Carousel.start();
+}
+
 /**
  * 10. Test your site, thoroughly!
  * - What happens when you try to load the Malayan breed?
