@@ -1,5 +1,6 @@
 import * as Carousel from "./Carousel.js";
 // import axios from "axios";
+import { API_KEY } from "./key.js";
 
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
@@ -11,8 +12,6 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY =
-  "live_Dkf2VNavmeRLgrjGP9AWeimSG8hJdlqEnbgLp2UX4bvKAKGRagIxEQcMBMb7HzNA";
 
 /**
  * 1. Create an async function "initialLoad" that does the following:
