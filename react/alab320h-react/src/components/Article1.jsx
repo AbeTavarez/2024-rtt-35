@@ -1,9 +1,11 @@
+import article1Img from '../assets/blog-image-1.jpg';
+
 function Article1() {
   return (
     <article>
       <h2>Article 1</h2>
       <div>
-        <img src="/blog-image-1.jpg" alt="" />
+        <img src={article1Img} alt="" />
       </div>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis cumque
