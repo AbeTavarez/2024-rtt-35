@@ -1,4 +1,4 @@
-import article1Img from '../assets/blog-image-1.jpg';
+import article1Img from "../assets/blog-image-1.jpg";
 
 function Article1() {
   return (
