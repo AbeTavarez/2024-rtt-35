@@ -65,13 +65,72 @@ const data = [
 
 function App() {
   const [learnersData, setLearnersData] = useState({ learners: data });
+  const [formData, setFormData] = useState({
+    name: "",
+    bio: "",
+    // scores: []
+  });
+
+  /**
+   * Handle Change
+   * @param {*} e 
+   */
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  };
+
+  /**
+   * HandleSubmit
+   * @param {*} e 
+   */
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    const newLearner = {...formData, scores: []};
+
+    // updating the learnersData with the newLearner
+    setLearnersData({
+      learners: [newLearner, ...learnersData.learners]
+    })   
+    
+    // creates the formData
+    setFormData({
+      name: '',
+      bio: ''
+    })
+  }
 
   return (
     <>
       <h1>Learners App</h1>
 
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="name">Name: </label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+        <br />
+
+        <label htmlFor="bio">Bio: </label>
+        <input
+          type="text"
+          name="bio"
+          value={formData.bio}
+          onChange={handleChange}
+        />
+
+        <br />
+        <input type="submit" value="Add" />
+      </form>
+
       {learnersData.learners.map((learner, index) => {
-        return <Learner learner={learner} key={index}/>
+        return <Learner learner={learner} key={index} />;
       })}
     </>
   );
