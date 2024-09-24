@@ -64,15 +64,15 @@ const data = [
 ];
 
 function App() {
+  // ===== State =====
   const [learnersData, setLearnersData] = useState({ learners: data });
   const [formData, setFormData] = useState({
     name: "",
     bio: "",
-    // scores: []
   });
 
   /**
-   * Handle Change
+   * ===== Handle Change =====
    * @param {*} e 
    */
   const handleChange = (e) => {
@@ -83,7 +83,7 @@ function App() {
   };
 
   /**
-   * HandleSubmit
+   * ===== HandleSubmit =====
    * @param {*} e 
    */
   const handleSubmit = (e) => {
@@ -94,9 +94,9 @@ function App() {
     // updating the learnersData with the newLearner
     setLearnersData({
       learners: [newLearner, ...learnersData.learners]
-    })   
+    })
     
-    // creates the formData
+    // Re-creates the formData state
     setFormData({
       name: '',
       bio: ''
