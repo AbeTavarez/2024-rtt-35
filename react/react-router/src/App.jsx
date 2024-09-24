@@ -6,7 +6,9 @@ import ProfilePage from "./pages/ProfilePage";
 import "./App.css";
 
 function App() {
-  console.log(import.meta.env.VITE_API_KEY)
+  // reads the environment variables from .env file
+  console.log(import.meta.env.VITE_API_KEY);
+
   return (
     <>
       <Navbar />
