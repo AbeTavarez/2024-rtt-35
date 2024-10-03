@@ -1,0 +1,15 @@
+doctype html
+html
+    head 
+     title='Acme Inc'
+     link(rel="stylesheet", href="style.css")
+     script(src="/myscript.js") 
+    body
+     h1 #{title}
+     h2 Hello #{username}!
+     a(href='/services') Services
+     a(href='/pricing') Pricing
+     p='We have the best products!'
+     form(action="/create", method="post")
+        input(type="text")
+        input(type="submit", value="Send")
