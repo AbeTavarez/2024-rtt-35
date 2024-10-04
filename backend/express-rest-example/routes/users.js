@@ -1,12 +1,18 @@
 import { Router } from "express";
 import { users } from "../data/users.js";
+import { error } from "../utils/error.js";
 
 const usersRouter = Router();
 
 /**
  * GET
  */
-usersRouter.get("/", (req, res) => {
+usersRouter.get("/", (req, res, next) => {
+  console.log(req.query);
+  console.log("APIKEY::: ", req.key);
+
+    // next(error(402, 'Something went wrong!'))
+
   res.json(users);
 });
 
@@ -19,7 +25,7 @@ usersRouter.get("/:id", (req, res, next) => {
   if (user) {
     res.json(user);
   } else {
-    next(); // calls the custom 404 middleware
+    next(error(404, "Resource not found!")); // calls the custom 404 middleware
   }
 });
 
