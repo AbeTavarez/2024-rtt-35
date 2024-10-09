@@ -39,7 +39,7 @@ app.use("/api", function (req, res, next) {
   if (!key) {
     // res.status(400);
     // return res.json({ error: "API Key Required" });
-    next(error(400, "API Key Required"));
+    next(error(400, "API Key Required, Query: api-key is required"));
   }
 
   // Check for key validity.
