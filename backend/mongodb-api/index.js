@@ -1,18 +1,17 @@
 import express from 'express';
-import dotenv from 'dotenv';
-
-// Configure our ENV variables
-dotenv.config();
-console.log(process.env.PORT);
-console.log(process.env.MONGODB_URI);
-
+import gradesRouter from './routes/grades.js';
+// import './loadEnv.js';
 
 const app = express();
 const PORT = process.env.PORT;
+
+// middlewares
+app.use(express.json());
+
+app.use('/api/grades', gradesRouter);
 
 
 app.get('/', (req, res) => res.send('ok'));
 
 
 app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
-
