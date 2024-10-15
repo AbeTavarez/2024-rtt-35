@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { taskSchema } from "./Task.js";
 
 const projectSchema = new mongoose.Schema(
   {
@@ -16,7 +17,7 @@ const projectSchema = new mongoose.Schema(
     endDate: {
       type: Date,
     },
-    tasks: [],
+    tasks: [taskSchema],
   },
   { timestamps: true },
 );
