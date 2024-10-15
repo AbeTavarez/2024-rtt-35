@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import projectsRouter from './routes/projects.js';
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
@@ -20,7 +21,7 @@ try {
 app.use(morgan('dev')); // logger
 app.use(express.json()); // parse data to the body
 app.use(express.urlencoded({extended: true}));
-
+app.use(cors()); // allows backend to talk to frontend in the same machine
 
 // ===== Routes ===== //
 app.use('/api/projects', projectsRouter);
