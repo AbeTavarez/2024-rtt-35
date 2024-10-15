@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 export const taskSchema = new mongoose.Schema({
     projectId: {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.ObjectId,
         ref: 'Task',
         required: true
     },
