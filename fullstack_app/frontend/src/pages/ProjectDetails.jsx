@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { MdOutlineDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 import PropTypes from "prop-types";
+import CreateTaskForm from "../components/CreateTaskForm";
 
 export default function ProjectDetails({ projects, setProjects }) {
   const navigate = useNavigate();
@@ -13,7 +14,6 @@ export default function ProjectDetails({ projects, setProjects }) {
   const [project, setProject] = useState(null);
   const [updateFormData, setUpdateFormData] = useState({});
   const [showUpdateForm, setShowUpdateForm] = useState(false);
-
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -55,47 +55,48 @@ export default function ProjectDetails({ projects, setProjects }) {
 
   const handleChange = (e) => {
     setUpdateFormData({
-        ...updateFormData,
-        [e.target.name]: e.target.value
-    })
-  }
+      ...updateFormData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     try {
-        e.preventDefault();
-        // makes PUT request to update project by the id
-        const res = await fetch(`http://localhost:4000/api/projects/${params.id}`, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'PUT',
-            body: JSON.stringify(updateFormData)
-        });
+      e.preventDefault();
+      // makes PUT request to update project by the id
+      const res = await fetch(
+        `http://localhost:4000/api/projects/${params.id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+          body: JSON.stringify(updateFormData),
+        },
+      );
 
-        // we get back the updatedProject
-        const data = await res.json();
-        console.log(data);
+      // we get back the updatedProject
+      const data = await res.json();
+      console.log(data);
 
-        // update the current project state
-        setProject(data.updatedProject);
-        
-        // updating the projects array
-        const updatedProjects = projects.map((p) => {
-            if (p._id === params.id) {
-                return data.updatedProject;
-            } else {
-                return p;
-            }
-        });
+      // update the current project state
+      setProject(data.updatedProject);
 
-        console.log(updatedProjects);
-        setProjects(updatedProjects);
+      // updating the projects array
+      const updatedProjects = projects.map((p) => {
+        if (p._id === params.id) {
+          return data.updatedProject;
+        } else {
+          return p;
+        }
+      });
 
+      console.log(updatedProjects);
+      setProjects(updatedProjects);
     } catch (error) {
-        console.error(error);
-        
+      console.error(error);
     }
-  }
+  };
 
   return (
     <main>
@@ -113,25 +114,41 @@ export default function ProjectDetails({ projects, setProjects }) {
         </button>
       </div>
 
-
       <div>
-        { showUpdateForm && (
-
-            <form onSubmit={handleSubmit}>
-            <label htmlFor="name">Project Name:
-                <input type='text' name="name" value={updateFormData.name} onChange={handleChange}/>
+        {showUpdateForm && (
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="name">
+              Project Name:
+              <input
+                type="text"
+                name="name"
+                value={updateFormData.name}
+                onChange={handleChange}
+              />
             </label>
-            <label htmlFor="description">Project Description:
-                <input type='text' name="description" value={updateFormData.description} onChange={handleChange}/>
+            <label htmlFor="description">
+              Project Description:
+              <input
+                type="text"
+                name="description"
+                value={updateFormData.description}
+                onChange={handleChange}
+              />
             </label>
 
-            <input type='submit' value='Save'/>
-        </form>
+            <input type="submit" value="Save" />
+          </form>
         )}
       </div>
 
       <div>
         <h2>Tasks</h2>
+        <CreateTaskForm
+          projectId={params.id}
+          setProject={setProject}
+          project={project}
+        />
+
         {project?.tasks.map((task) => (
           <div key={task._id}>
             <h3>Title: {task.title}</h3>
