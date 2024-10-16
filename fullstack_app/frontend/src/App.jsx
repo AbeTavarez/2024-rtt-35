@@ -36,7 +36,7 @@ function App() {
           }
         />
 
-          <Route path="/projects/:id" element={<ProjectDetails />}/>
+          <Route path="/projects/:id" element={<ProjectDetails projects={projects} setProjects={setProjects}/>}/>
       </Routes>
     </>
   );
