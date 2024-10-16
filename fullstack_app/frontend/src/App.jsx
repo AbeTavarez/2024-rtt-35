@@ -7,7 +7,7 @@ import ProjectDetails from "./pages/ProjectDetails";
 import "./App.css";
 
 function App() {
-  const [projects, setProjects] = useState(null);
+  const [projects, setProjects] = useState([]);
 
   // fetch all project when component first render
   useEffect(() => {
