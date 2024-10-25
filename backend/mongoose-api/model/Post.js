@@ -26,6 +26,10 @@ const postSchema = new mongoose.Schema({
   },
 });
 
+//TODO: create index for Post
+
+
+
 // create a new Post model
 const Post = mongoose.model('Post', postSchema);
 export default Post;

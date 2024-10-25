@@ -8,8 +8,6 @@ export const counterSlice = createSlice({
     },
     reducers: {
         increment: (state) => {
-            // console.log(state);
-            // console.log(action);
             
             // we don't need to return the state, immer will return it
             state.value += 1 
